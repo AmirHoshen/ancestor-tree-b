@@ -6,23 +6,40 @@
 #include "FamilyTree.hpp"
 using namespace family;
 
-
+/**
+ * add a father for the given name node if exists if not throw an exception.
+ * @param name the node we look for in the tree.
+ * @param father the father of name(node) we want to add.
+ * @return the father into the tree.
+ */
 Tree& Tree::addFather(string name, string father)
 {
-    add(this->root, name, father, true);
+    Node* tmp = findNode(_root,name);
+    if(tmp == NULL)throw runtime_error("This name is not a member of this ancestor tree\n");
+    add(this->_root, name, father, true);
     return *this;
 }
 
+/**
+ * add a mother for the given name node if exists if not throw an exception.
+ * @param name the node we look for in the tree.
+ * @param mother the mother of the name(node) we want to add.
+ * @return the mother into the tree.
+ */
 Tree& Tree::addMother(string name, string mother)
 {
-    add(this->root, name, mother, false);
+    Node* tmp = findNode(_root,name);
+    if(tmp == NULL)throw runtime_error("This name is not a member of this ancestor tree\n");
+    add(this->_root, name, mother, false);
     return *this;
 };
 
-void family::Tree::display()
+/**
+ * print the tree using a help method printTree.
+ */
+void Tree::display()
 {
-    printTree(root);
-
+    printTree(_root);
 }
 
 /**
@@ -30,9 +47,8 @@ void family::Tree::display()
  * if he is null then the tree is empty
  * @param root of the tree.
  */
-void family::Tree::printTree(Node* root)
+void Tree::printTree(Node* root)
 {
-
     if(root != NULL){
         if(root->getFather()!= NULL)
         {
@@ -51,7 +67,7 @@ void family::Tree::printTree(Node* root)
 
 /*Return the level of a given string value in the tree*/
 /**
- * source: https://www.youtube.com/watch?v=IJCg_jxOM_Q
+ * source code from: https://www.youtube.com/watch?v=IJCg_jxOM_Q
  * level of the root start from 1.
  * using this method finds out what depth of the node we look for.
  * @param node start looking from this given node.
@@ -66,6 +82,13 @@ int Tree::getLevel(Node *node, string name)
 }
 
 /*Help method for getLevel*/
+/**
+ * gets the level of the name we look for in the tree.
+ * @param node the root node.
+ * @param name the node depth we look for.
+ * @param level the level of that name node we looked for.
+ * @return the level he's at.
+ */
 int Tree::getLevelUtil(Node *node, string name, int level)
 {
     if(node == NULL) return 0;
@@ -76,20 +99,25 @@ int Tree::getLevelUtil(Node *node, string name, int level)
     return downlevel;
 }
 
-string family::Tree::relation(string name)
+/**
+ *
+ * @param name
+ * @return
+ */
+string Tree::relation(string name)
 {
     return "";
 }
 
-string family::Tree::find(string relation)
+string Tree::find(string relation)
 {
 
     return "";
 }
 
-void family::Tree::remove(string name)
+void Tree::remove(string name)
 {
-    Node* tmp = findNode(root, name);
+    Node* tmp = findNode(_root, name);
     if(tmp == NULL)return;
     deleteSubTree(tmp);
 
@@ -107,8 +135,9 @@ void Tree::deleteSubTree(Node* root){
     free(root);
 }
 
-Node* family::Tree::findNode(Node* root, string name)
+Node* Tree::findNode(Node* root, string name)
 {
+    if(this->_root == NULL)throw runtime_error("The tree is empty!!\n");
     if (root == NULL)
         return NULL;
 
@@ -124,22 +153,20 @@ Node* family::Tree::findNode(Node* root, string name)
     Node* res2 = findNode(root->getMother(), name);
 
     return res2;
-
-
 }
 
-void family::Tree::add(Node* root ,string name, string parent,bool g){
-    if(root != NULL && g == true && root->getName() == name && root->getFather() == NULL){
-        root->setNode(parent, g);
+void Tree::add(Node* root ,string name, string parent,bool gender){
+    if(root != NULL && gender == true && root->getName() == name && root->getFather() == NULL){
+        root->setNode(parent, gender);
         return;
     }
-    if(root != NULL && g == false && root->getName() == name && root->getMother() == NULL){
-        root->setNode(parent, g);
+    if(root != NULL && gender == false && root->getName() == name && root->getMother() == NULL){
+        root->setNode(parent, gender);
         return;
     }
     if(root != NULL){
-        add(root->getMother(), name, parent, g);
-        add(root->getFather(), name, parent, g);
+        add(root->getMother(), name, parent, gender);
+        add(root->getFather(), name, parent, gender);
     }
     return;
 }

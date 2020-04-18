@@ -57,12 +57,12 @@ namespace family{
 
 
     class Tree{
-        Node* root;
+        Node* _root;
     public:
 
         Tree(string name)
         {
-            this->root = new Node(name);
+            this->_root = new Node(name);
         }
         Tree& addFather(string name, string father);
         Tree& addMother(string name, string mother);
