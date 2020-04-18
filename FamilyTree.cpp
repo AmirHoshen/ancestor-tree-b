@@ -100,23 +100,33 @@ int Tree::getLevelUtil(Node *node, string name, int level)
 }
 
 /**
- *
- * @param name
- * @return
+ *given a name this method should return the relation of this node to the root.
+ * @param name the node name relation to the root we are looking for.
+ * @return (father/mother, grandfather/grandmother, great-grandfather/great-grandmother, ..etc.)
  */
 string Tree::relation(string name)
 {
     return "";
 }
 
+/**
+ * given a relation string method should return the name of the node who's in this relation.
+ * @param relation - father/mother , grandfather/grandmother , great-grandfather/great-grandmother, ..etc.
+ * @return string the name of this node who's associated with this given relation.
+ */
 string Tree::find(string relation)
 {
 
     return "";
 }
 
+/**
+ * remove a tree(if root is given, except for the root) or a subtree from the tree.
+ * @param name
+ */
 void Tree::remove(string name)
 {
+    if(_root->getName() == name)throw runtime_error("The root: "+_root->getName()+" cannot be deleted\n");
     Node* tmp = findNode(_root, name);
     if(tmp == NULL)return;
     deleteSubTree(tmp);
@@ -125,7 +135,6 @@ void Tree::remove(string name)
 
 void Tree::deleteSubTree(Node* root){
     if(root == NULL) return;
-
     //deleting all subtree of the node.
     deleteSubTree(root->getFather());
     deleteSubTree(root->getMother());
