@@ -16,19 +16,17 @@ namespace family{
         Node* father;
         Node* mother;
         string name;
+        //false = mother, true = father
+        bool _gender;
 
     public:
-        Node()
-        {
-            string name = "";
-            Node* father = NULL;
-            Node* mother = NULL;
-        }
-        Node(string name)
+
+        Node(string name , bool gender)
         {
             this->name = name;
             father = NULL;
             mother = NULL;
+            _gender = gender;
         }
         ~Node();
         string getName(){
@@ -40,16 +38,20 @@ namespace family{
         Node* getFather(){
             return this->father;
         }
-        void setNode(string parent, bool g) //false = mother, true = father
+        bool getGender(){
+            return this->_gender;
+        }
+
+        void setNode(string parent, bool gender) //false = mother, true = father
         {
-            if(g == true)
+            if(gender == true)
             {
-                Node* ans = new Node(parent);
+                Node* ans = new Node(parent,gender);
                 this->father = ans;
             }
             else
             {
-                Node* ans = new Node(parent);
+                Node* ans = new Node(parent,gender);
                 this->mother = ans;
             }
         }
@@ -62,7 +64,7 @@ namespace family{
 
         Tree(string name)
         {
-            this->_root = new Node(name);
+            this->_root = new Node(name,true);
         }
         Tree& addFather(string name, string father);
         Tree& addMother(string name, string mother);
@@ -71,7 +73,7 @@ namespace family{
         void display();
         void remove(string name);
         void deleteSubTree(Node* root);
-        void add(Node* root ,string name, string parent,bool g);
+        void add(Node* root ,string name, string parent,bool gender);
         void printTree(Node* root);
         int getLevel(Node *node, string name);
         int getLevelUtil(Node *node, string name, int level);

@@ -126,7 +126,13 @@ string Tree::find(string relation)
  */
 void Tree::remove(string name)
 {
-    if(_root->getName() == name)throw runtime_error("The root: "+_root->getName()+" cannot be deleted\n");
+    if(_root->getName() == name){
+        if(_root->getFather() != NULL){
+
+        }else if (_root->getMother() != NULL){
+
+        }else throw runtime_error("The root: "+_root->getName()+" cannot be deleted\n");
+    }
     Node* tmp = findNode(_root, name);
     if(tmp == NULL)return;
     deleteSubTree(tmp);
