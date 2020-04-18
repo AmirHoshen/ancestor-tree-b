@@ -70,6 +70,7 @@ namespace family{
         string find(string relation);
         void display();
         void remove(string name);
+        void deleteSubTree(Node* root);
         void add(Node* root ,string name, string parent,bool g);
         void printTree(Node* root);
         Node* findNode(Node* root, string name);

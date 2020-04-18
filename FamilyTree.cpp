@@ -31,12 +31,12 @@ void family::Tree::printTree(Node* root)
     if(root != NULL){
         if(root->getFather()!= NULL)
         {
-            printTree(root->father);
+            printTree(root->getFather());
         }
-        cout<< root->name<< " ";
+        cout<< root->getName()<< " ";
         if(root->getMother()!= NULL)
         {
-            printTree(root->mother);
+            printTree(root->getMother());
         }
 
     }else{
@@ -63,7 +63,7 @@ void family::Tree::remove(string name)
 
 }
 
-void deleteSubTree(Node* root){
+void Tree::deleteSubTree(Node* root){
     if(root == NULL) return;
 
     //deleting all subtree of the node.
@@ -71,7 +71,7 @@ void deleteSubTree(Node* root){
     deleteSubTree(root->getMother());
 
     //then delete the root node of this subtree.
-    cout<<"\n Deleting node: "<<root->getName();<<endl;
+    cout<<"\n Deleting node: "<<root->getName()<<endl;
     free(root);
 }
 
