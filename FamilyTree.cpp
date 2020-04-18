@@ -44,6 +44,22 @@ void family::Tree::printTree(Node* root)
     }
 }
 
+/*Return the level of a given string value in the tree*/
+int Tree::getLevel(Node *node, string name)
+{
+    return getLevelUtil(node, name,1);
+}
+
+/*Help method for getLevel*/
+int Tree::getLevelUtil(Node *node, string name, int level)
+{
+    if(node == NULL) return 0;
+    if(node->getName() == name) return level;
+    int downlevel = getLevelUtil(node->getFather(),name, level+1);
+    if(downLevel != 0) return downLevel;
+    downLevel = getlevelUtil(node->getMother(),name, level+1);
+    return downLevel;
+}
 
 string family::Tree::relation(string name)
 {
@@ -52,6 +68,7 @@ string family::Tree::relation(string name)
 
 string family::Tree::find(string relation)
 {
+
     return "";
 }
 

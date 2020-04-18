@@ -73,6 +73,8 @@ namespace family{
         void deleteSubTree(Node* root);
         void add(Node* root ,string name, string parent,bool g);
         void printTree(Node* root);
+        int getLevel(Node *node, string name);
+        int getLevelUtil(Node *node, string name, int level);
         Node* findNode(Node* root, string name);
 
     };
