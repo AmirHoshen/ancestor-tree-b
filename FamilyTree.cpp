@@ -3,7 +3,9 @@
 //
 
 #include <iostream>
+#include <string>
 #include "FamilyTree.hpp"
+
 using namespace family;
 
 /**
@@ -12,10 +14,9 @@ using namespace family;
  * @param father the father of name(node) we want to add.
  * @return the father into the tree.
  */
-Tree& Tree::addFather(string name, string father)
-{
-    Node* tmp = findNode(_root,name);
-    if(tmp == NULL)throw runtime_error("This name is not a member of this ancestor tree\n");
+Tree &Tree::addFather(string name, string father) {
+    Node *tmp = findNode(_root, name);
+    if (tmp == NULL)throw runtime_error("This name is not a member of this ancestor tree\n");
     add(this->_root, name, father, true);
     return *this;
 }
@@ -26,10 +27,9 @@ Tree& Tree::addFather(string name, string father)
  * @param mother the mother of the name(node) we want to add.
  * @return the mother into the tree.
  */
-Tree& Tree::addMother(string name, string mother)
-{
-    Node* tmp = findNode(_root,name);
-    if(tmp == NULL)throw runtime_error("This name is not a member of this ancestor tree\n");
+Tree &Tree::addMother(string name, string mother) {
+    Node *tmp = findNode(_root, name);
+    if (tmp == NULL)throw runtime_error("This name is not a member of this ancestor tree\n");
     add(this->_root, name, mother, false);
     return *this;
 };
@@ -37,8 +37,7 @@ Tree& Tree::addMother(string name, string mother)
 /**
  * print the tree using a help method printTree.
  */
-void Tree::display()
-{
+void Tree::display() {
     printTree(_root);
 }
 
@@ -47,22 +46,101 @@ void Tree::display()
  * if he is null then the tree is empty
  * @param root of the tree.
  */
-void Tree::printTree(Node* root)
-{
-    if(root != NULL){
-        if(root->getFather()!= NULL)
-        {
+void Tree::printTree(Node *root) {
+    if (root != NULL) {
+        if (root->getFather() != NULL) {
             printTree(root->getFather());
         }
-        cout<< root->getName()<< " ";
-        if(root->getMother()!= NULL)
-        {
+        cout << root->getName() << " ";
+        if (root->getMother() != NULL) {
             printTree(root->getMother());
         }
 
-    }else{
+    } else {
         throw runtime_error("The tree is empty!!\n");
     }
+}
+
+
+/**
+ *given a name this method should return the relation of this node to the root.
+ * @param name the node name relation to the root we are looking for.
+ * @return (father/mother, grandfather/grandmother, great-grandfather/great-grandmother, ..etc.)
+ */
+string Tree::relation(string name) {
+    //omer code here..
+    return "";
+}
+
+/**
+ * given a relation string method should return the name of the node who's in this relation.
+ * @param relation - father/mother , grandfather/grandmother , great-grandfather/great-grandmother, ..etc.
+ * @return string the name of this node who's associated with this given relation.
+ */
+string Tree::find(string relation) {
+    string gender = "";
+    if (relation == "me")
+        return _root->getName();
+    if (relation.at(0) == 'm')
+        return this->getMother()->getName();
+    if (relation.at(0) == 'f')
+        return this->getFather()->getName();
+    int size = relation.size();
+
+    //Relation isn't father or mother
+    if (size > 6) {
+        char check = relation.at(size - 6);
+        if (check == 'f')
+            gender = "father";
+        else
+            gender = "mother";
+        //case grandfather
+        if (relation.at(2) == 'a') {
+            if (gender == "father") {
+                if (this->getFather()->getFather() != NULL)
+                    return this->getFather()->getFather()->getName();
+                if (this->getMother()->getFather != NULL)
+                    return this->getMother()->getFather()->getName();
+            } else //case grandmother
+            {
+                if (this->getFather()->getMother() != NULL)
+                    return this->getFather()->getMother()->getName();
+                if (this->getMother()->getMother() != NULL)
+                    return this->getMother()->getMother()->getName();
+            }
+        }
+    } else if (relation.at(0) != 'g') {
+        throw runtime_error(
+                "illegal prefix input, options are: father,mother, grandfather, grandmother, great-grandfather,..etc.");
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    int count = 3; //levels in tree
+    for (size_t i = 0; i < relation.size(); i++) {
+        if (relation.at(i) == '-')
+            count++;
+    }
+    //cout<<count<<endl;
+    vector <string> list = getNodesAtDistance(count);
+    //cout<<"size"+list.size();
+
+    for (size_t i = 0; i < list.size(); i++) {
+        bool flag = findMe(this, list.at(i));
+        // cout<<flag;
+        if (flag == true) {
+            if (gender == "father") {
+                if (node->gender == 0) {
+                    return node->name;
+                }
+            } else {
+                if (node->gender == 1)
+                    return node->name;
+            }
+        } else {
+            throw std::exception();
+        }
+
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
 /*Return the level of a given string value in the tree*/
@@ -74,11 +152,10 @@ void Tree::printTree(Node* root)
  * @param name the node we are looking for in the tree.
  * @return the depth of the node who's name we looked for in the tree.
  */
-int Tree::getLevel(Node *node, string name)
-{
-    Node* tmp = findNode(node, name);
-    if(tmp == NULL)throw runtime_error("This name is not a memeber of the ancestor tree\n");
-    return getLevelUtil(node, name,1);
+int Tree::getLevel(Node *node, string name) {
+    Node *tmp = findNode(node, name);
+    if (tmp == NULL)throw runtime_error("This name is not a memeber of the ancestor tree\n");
+    return getLevelUtil(node, name, 1);
 }
 
 /*Help method for getLevel*/
@@ -89,70 +166,13 @@ int Tree::getLevel(Node *node, string name)
  * @param level the level of that name node we looked for.
  * @return the level he's at.
  */
-int Tree::getLevelUtil(Node *node, string name, int level)
-{
-    if(node == NULL) return 0;
-    if(node->getName() == name) return level;
-    int downlevel = getLevelUtil(node->getFather(),name, level+1);
-    if(downlevel != 0) return downlevel;
-    downlevel = getLevelUtil(node->getMother(),name, level+1);
+int Tree::getLevelUtil(Node *node, string name, int level) {
+    if (node == NULL) return 0;
+    if (node->getName() == name) return level;
+    int downlevel = getLevelUtil(node->getFather(), name, level + 1);
+    if (downlevel != 0) return downlevel;
+    downlevel = getLevelUtil(node->getMother(), name, level + 1);
     return downlevel;
-}
-
-/**
- *given a name this method should return the relation of this node to the root.
- * @param name the node name relation to the root we are looking for.
- * @return (father/mother, grandfather/grandmother, great-grandfather/great-grandmother, ..etc.)
- */
-string Tree::relation(string name)
-{
-    //omer code here..
-    return "";
-}
-
-/**
- * given a relation string method should return the name of the node who's in this relation.
- * @param relation - father/mother , grandfather/grandmother , great-grandfather/great-grandmother, ..etc.
- * @return string the name of this node who's associated with this given relation.
- */
-string Tree::find(string relation)
-{
-
-    return "";
-}
-
-/**
- * remove a tree(if root is given, except for the root) or a subtree from the tree.
- * @param name
- */
-void Tree::remove(string name)
-{
-    if(_root->getName() == name){
-        if(_root->getFather() != NULL){
-
-        }else if (_root->getMother() != NULL){
-
-        }else throw runtime_error("The root: "+_root->getName()+" cannot be deleted\n");
-    }
-    Node* tmp = findNode(_root, name);
-    if(tmp == NULL)return;
-    deleteSubTree(tmp);
-
-}
-
-/**
- * Help method for remove method deleting a subtree from ancestor tree.
- * @param root the ancestor tree root.
- */
-void Tree::deleteSubTree(Node* root){
-    if(root == NULL) return;
-    //deleting all subtree of the node.
-    deleteSubTree(root->getFather());
-    deleteSubTree(root->getMother());
-
-    //then delete the root node of this subtree.
-    cout<<"\n Deleting node: "<<root->getName()<<endl;
-    free(root);
 }
 
 /**
@@ -162,9 +182,8 @@ void Tree::deleteSubTree(Node* root){
  * @param name to look for in the tree.
  * @return the name(node) if exists.
  */
-Node* Tree::findNode(Node* root, string name)
-{
-    if(this->_root == NULL)throw runtime_error("The tree is empty!!\n");
+Node *Tree::findNode(Node *root, string name) {
+    if (this->_root == NULL)throw runtime_error("The tree is empty!!\n");
     if (root == NULL)
         return NULL;
 
@@ -172,14 +191,47 @@ Node* Tree::findNode(Node* root, string name)
         return root;
 
     /* then recur on father sutree */
-    Node* res1 = findNode(root->getFather(), name);
+    Node *res1 = findNode(root->getFather(), name);
 
-    if(res1 != NULL) return res1; // node found, no need to look further
+    if (res1 != NULL) return res1; // node found, no need to look further
 
     /* node is not found in father, so recur on right subtree */
-    Node* res2 = findNode(root->getMother(), name);
-    if(res2 != NULL)return res2;
+    Node *res2 = findNode(root->getMother(), name);
+    if (res2 != NULL)return res2;
     else throw runtime_error("This name is not a member of the ancestor tree\n");
+}
+
+/**
+ * remove a tree(if root is given, except for the root) or a subtree from the tree.
+ * @param name
+ */
+void Tree::remove(string name) {
+    if (_root->getName() == name) {
+        if (_root->getFather() != NULL) {
+
+        } else if (_root->getMother() != NULL) {
+
+        } else throw runtime_error("The root: " + _root->getName() + " cannot be deleted\n");
+    }
+    Node *tmp = findNode(_root, name);
+    if (tmp == NULL)return;
+    deleteSubTree(tmp);
+
+}
+
+/**
+ * Help method for remove method deleting a subtree from ancestor tree.
+ * @param root the ancestor tree root.
+ */
+void Tree::deleteSubTree(Node *root) {
+    if (root == NULL) return;
+    //deleting all subtree of the node.
+    deleteSubTree(root->getFather());
+    deleteSubTree(root->getMother());
+
+    //then delete the root node of this subtree.
+    cout << "\n Deleting node: " << root->getName() << endl;
+    free(root);
 }
 
 /**
@@ -189,16 +241,16 @@ Node* Tree::findNode(Node* root, string name)
  * @param parent is the parent name.
  * @param gender is the parent gender.
  */
-void Tree::add(Node* root ,string name, string parent,bool gender){
-    if(root != NULL && gender == true && root->getName() == name && root->getFather() == NULL){
+void Tree::add(Node *root, string name, string parent, bool gender) {
+    if (root != NULL && gender == true && root->getName() == name && root->getFather() == NULL) {
         root->setNode(parent, gender);
         return;
     }
-    if(root != NULL && gender == false && root->getName() == name && root->getMother() == NULL){
+    if (root != NULL && gender == false && root->getName() == name && root->getMother() == NULL) {
         root->setNode(parent, gender);
         return;
     }
-    if(root != NULL){
+    if (root != NULL) {
         add(root->getMother(), name, parent, gender);
         add(root->getFather(), name, parent, gender);
     }
