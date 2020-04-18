@@ -106,6 +106,7 @@ int Tree::getLevelUtil(Node *node, string name, int level)
  */
 string Tree::relation(string name)
 {
+    //omer code here..
     return "";
 }
 
@@ -139,6 +140,10 @@ void Tree::remove(string name)
 
 }
 
+/**
+ * Help method for remove method deleting a subtree from ancestor tree.
+ * @param root the ancestor tree root.
+ */
 void Tree::deleteSubTree(Node* root){
     if(root == NULL) return;
     //deleting all subtree of the node.
@@ -150,6 +155,13 @@ void Tree::deleteSubTree(Node* root){
     free(root);
 }
 
+/**
+ * Given a name to look for in the tree and a root node to start from,
+ * the method returns the name(node) we look for.
+ * @param root the node we start looking from.
+ * @param name to look for in the tree.
+ * @return the name(node) if exists.
+ */
 Node* Tree::findNode(Node* root, string name)
 {
     if(this->_root == NULL)throw runtime_error("The tree is empty!!\n");
@@ -166,10 +178,17 @@ Node* Tree::findNode(Node* root, string name)
 
     /* node is not found in father, so recur on right subtree */
     Node* res2 = findNode(root->getMother(), name);
-
-    return res2;
+    if(res2 != NULL)return res2;
+    else throw runtime_error("This name is not a member of the ancestor tree\n");
 }
 
+/**
+ * add a node to the tree for the given name node by gender.
+ * @param root of the tree to add the father or mother.
+ * @param name node to add the parent.
+ * @param parent is the parent name.
+ * @param gender is the parent gender.
+ */
 void Tree::add(Node* root ,string name, string parent,bool gender){
     if(root != NULL && gender == true && root->getName() == name && root->getFather() == NULL){
         root->setNode(parent, gender);
