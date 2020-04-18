@@ -25,6 +25,11 @@ void family::Tree::display()
 
 }
 
+/**
+ * receiving the ancestor tree root and printing the tree.
+ * if he is null then the tree is empty
+ * @param root of the tree.
+ */
 void family::Tree::printTree(Node* root)
 {
 
@@ -40,13 +45,23 @@ void family::Tree::printTree(Node* root)
         }
 
     }else{
-        cout<<"The tree is empty!!\n"<<endl;
+        throw runtime_error("The tree is empty!!\n");
     }
 }
 
 /*Return the level of a given string value in the tree*/
+/**
+ * source: https://www.youtube.com/watch?v=IJCg_jxOM_Q
+ * level of the root start from 1.
+ * using this method finds out what depth of the node we look for.
+ * @param node start looking from this given node.
+ * @param name the node we are looking for in the tree.
+ * @return the depth of the node who's name we looked for in the tree.
+ */
 int Tree::getLevel(Node *node, string name)
 {
+    Node* tmp = findNode(node, name);
+    if(tmp == NULL)throw runtime_error("This name is not a memeber of the ancestor tree\n");
     return getLevelUtil(node, name,1);
 }
 
@@ -56,9 +71,9 @@ int Tree::getLevelUtil(Node *node, string name, int level)
     if(node == NULL) return 0;
     if(node->getName() == name) return level;
     int downlevel = getLevelUtil(node->getFather(),name, level+1);
-    if(downLevel != 0) return downLevel;
-    downLevel = getlevelUtil(node->getMother(),name, level+1);
-    return downLevel;
+    if(downlevel != 0) return downlevel;
+    downlevel = getLevelUtil(node->getMother(),name, level+1);
+    return downlevel;
 }
 
 string family::Tree::relation(string name)
