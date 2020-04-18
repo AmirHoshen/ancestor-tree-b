@@ -2,8 +2,6 @@
 // Created by miros on 17/04/2020.
 //
 
-#ifndef ANCESTOR_TREE_B_FAMILYTREE_HPP
-#define ANCESTOR_TREE_B_FAMILYTREE_HPP
 
 
 #pragma once
@@ -22,9 +20,9 @@ namespace family{
     public:
         Node()
         {
-            name = "";
-            father = NULL;
-            mother = NULL;
+            string name = "";
+            Node* father = NULL;
+            Node* mother = NULL;
         }
         Node(string name)
         {
@@ -57,6 +55,7 @@ namespace family{
         }
     };
 
+
     class Tree{
         Node* root;
     public:
@@ -78,8 +77,3 @@ namespace family{
     };
 }
 
-
-
-
-
-#endif //ANCESTOR_TREE_B_FAMILYTREE_HPP

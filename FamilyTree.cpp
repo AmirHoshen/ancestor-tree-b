@@ -27,27 +27,23 @@ void family::Tree::display()
 
 void family::Tree::printTree(Node* root)
 {
-    if(root==NULL) return;
 
-    cout<< root->getName() <<endl;
-    printTree(root->getFather());
-    printTree(root->getMother());
+    if(root != NULL){
+        if(root->getFather()!= NULL)
+        {
+            printTree(root->father);
+        }
+        cout<< root->name<< " ";
+        if(root->getMother()!= NULL)
+        {
+            printTree(root->mother);
+        }
 
-
-    // if(root == NULL)return;
-    // printTree(root->getFather());
-    // printTree(root->getMother());
-    // if(root->getFather() == NULL && root->getMother() == NULL)
-    // {
-    //     cout << root->getName() << endl;
-    // }
-
-    // cout << root->getFather()->getName() + "\n";
-    // cout << root->getMother()->getName() + "\n";
-    // cout << root->getName() << endl;
-
-
+    }else{
+        cout<<"The tree is empty!!\n"<<endl;
+    }
 }
+
 
 string family::Tree::relation(string name)
 {
@@ -63,7 +59,20 @@ void family::Tree::remove(string name)
 {
     Node* tmp = findNode(root, name);
     if(tmp == NULL)return;
+    deleteSubTree(tmp);
 
+}
+
+void deleteSubTree(Node* root){
+    if(root == NULL) return;
+
+    //deleting all subtree of the node.
+    deleteSubTree(root->getFather());
+    deleteSubTree(root->getMother());
+
+    //then delete the root node of this subtree.
+    cout<<"\n Deleting node: "<<root->getName();<<endl;
+    free(root);
 }
 
 Node* family::Tree::findNode(Node* root, string name)
