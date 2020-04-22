@@ -334,8 +334,8 @@ string Tree::nodeNameAtHeight(Node *node, int heightAns, bool gender)
  ********************************************************************************/
 void Tree::remove(string name)
 {
-    if (this->_root->getName() == name) throw runtime_error("Root can't be deleted\n");
-
+    if (this->_root->getName() == name)
+        throw runtime_error("Root can't be deleted\n");
     Node *removeNode = NULL;
     Node *runNode = NULL;
     findSubTree(this->_root, name, &removeNode); //find the subtree we want to delete.
@@ -374,14 +374,14 @@ void Tree::findSubTree(Node *root, string name, Node **runNode)
 }
 
 /********************************************************************************
- * Help method for removing , method deleting a subtree from ancestor Tree.
+ * Help method for removin, method deleting a subtree from ancestor Tree.
  * @param root the ancestor Tree root.
  *******************************************************************************/
 
 void Tree::deleteSubTree(Node *root)
 {
 
-    if (root != NULL)
+    if (root == NULL)
     {
         deleteSubTree(root->getFather());
         deleteSubTree(root->getMother());
